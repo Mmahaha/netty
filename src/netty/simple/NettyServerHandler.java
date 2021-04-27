@@ -20,13 +20,29 @@ public class NettyServerHandler extends ChannelInboundHandlerAdapter {
     Object msg：就是客户端发送的数据 默认Object
      */
     @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+    public void channelRead(ChannelHandlerContext ctx, Object msg) {
+        //使用taskQueue异步执行耗时任务
+        //1.提交到该channel对应的NIOEventLoop的taskQueue中
+        ctx.channel().eventLoop().execute(new Runnable() {
+            @Override
+            public void run() {
+                try{
+                    Thread.sleep(5 * 1000);
+                    ctx.writeAndFlush(Unpooled.copiedBuffer("heihei",CharsetUtil.UTF_8));
+                }catch (Exception ex){
+                    System.out.println("发生异常：" + ex.getMessage());
+                }
+            }
+        });
+
+        /*
         System.out.println("server ctx = " + ctx);
         //将msg转成ByteBuffer
         //此处的ByteBuf是Netty提供的，
         ByteBuf buf = (ByteBuf) msg;
         System.out.println("客户端发送消息是" + buf.toString(StandardCharsets.UTF_8));
         System.out.println("客户端地址：" + ctx.channel().remoteAddress());
+         */
     }
 
     //数据读取完毕
