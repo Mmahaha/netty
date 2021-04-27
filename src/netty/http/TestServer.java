@@ -10,7 +10,7 @@ public class TestServer {
     public static void main(String[] args) throws Exception{
         EventLoopGroup bossGroup = new NioEventLoopGroup();
         EventLoopGroup workerGroup = new NioEventLoopGroup();
-
+        //测试测试
         try{
             ServerBootstrap serverBootstrap = new ServerBootstrap();
             //.handler()是给bossGroup添加handler,.childHandler()是给workerGroup添加handler
